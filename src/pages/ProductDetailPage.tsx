@@ -1,11 +1,10 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import CartPanel from '@/components/CartPanel'
-import type { Cart, FetchResult, Product } from '@/types/ecommerce'
+import { useProduct } from '@/features/products/queries'
+import type { Cart } from '@/types/ecommerce'
 
 type ProductDetailPageProps = {
   cart: Cart
-  products: Product[]
-  productsResult: FetchResult<Product[]>
   onAddToCart: (productId: string) => void
   onRemoveFromCart: (productId: string) => void
   onClearCart: () => void
@@ -13,17 +12,13 @@ type ProductDetailPageProps = {
 
 function ProductDetailPage({
   cart,
-  products,
-  productsResult,
   onAddToCart,
   onRemoveFromCart,
   onClearCart,
 }: ProductDetailPageProps) {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const product = id && productsResult.status === 'success'
-    ? productsResult.data.find((item) => item.id === id)
-    : undefined
+  const { data: product, isLoading, error } = useProduct(id)
 
   return (
     <main className="products-page">
@@ -42,10 +37,10 @@ function ProductDetailPage({
       </section>
       <div className="shop-layout">
         <section className="catalog-section" aria-live="polite">
-          {productsResult.status === 'idle' || productsResult.status === 'loading' ? (
+          {isLoading ? (
             <p className="fetch-message" role="status">Chargement du produit…</p>
-          ) : productsResult.status === 'error' ? (
-            <p className="fetch-message error-message" role="alert">{productsResult.message}</p>
+          ) : error ? (
+            <p className="fetch-message error-message" role="alert">{error.message}</p>
           ) : !id || !product ? (
             <div className="fetch-message">
               <p>{!id ? 'Identifiant de produit manquant.' : `Aucun produit avec l’identifiant « ${id} ».`}</p>
@@ -82,12 +77,7 @@ function ProductDetailPage({
             </article>
           )}
         </section>
-        <CartPanel
-          cart={cart}
-          products={products}
-          onRemove={onRemoveFromCart}
-          onClear={onClearCart}
-        />
+        <CartPanel cart={cart} onRemove={onRemoveFromCart} onClear={onClearCart} />
       </div>
     </main>
   )
