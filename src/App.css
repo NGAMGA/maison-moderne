@@ -349,3 +349,11 @@
   .product-image-wrap { aspect-ratio: 1.35 / 1; }
   .product-title-row { align-items: baseline; flex-direction: row; }
 }
+
+
+.auth-form { display: grid; max-width: 380px; gap: 8px; padding: 35px 0 60px; }
+.auth-form label { color: var(--ink); font-size: 12px; font-weight: 700; }
+.auth-form input { padding: 10px 12px; border: 1px solid var(--line); background: white; color: var(--ink); font: inherit; font-size: 13px; }
+.auth-form .add-button { width: fit-content; margin-top: 10px; }
+.auth-switch { margin-top: 10px; color: var(--muted); font-size: 12px; }
+.auth-switch a { color: var(--ink); }

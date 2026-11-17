@@ -3,6 +3,7 @@ import SiteFooter from '@/components/SiteFooter'
 import SiteHeader from '@/components/SiteHeader'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import { useCart } from '@/hooks/useCart'
+import { ProtectedRoute } from '@/features/auth/ProtectedRoute'
 import HomePage from '@/pages/HomePage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import '@/App.css'
@@ -10,6 +11,9 @@ import '@/App.css'
 const ProductsPage = lazy(() => import('@/pages/ProductsPage'))
 const ProductDetailPage = lazy(() => import('@/pages/ProductDetailPage'))
 const OrdersPage = lazy(() => import('@/pages/OrdersPage'))
+const LoginPage = lazy(() => import('@/pages/LoginPage'))
+const SignupPage = lazy(() => import('@/pages/SignupPage'))
+const AccountPage = lazy(() => import('@/pages/AccountPage'))
 
 function App() {
   const { cart, itemCount, addToCart, removeFromCart, clearCart } = useCart()
@@ -40,6 +44,16 @@ function App() {
           <Route path="/products" element={<ProductsPage {...pageProps} />} />
           <Route path="/products/:id" element={<ProductDetailPage {...pageProps} />} />
           <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                <AccountPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
